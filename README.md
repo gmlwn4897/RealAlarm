@@ -733,6 +733,10 @@ public interface OnAlarmListener {
 
 
 alarmlistener 인터페이스를 만들어서 삭제버튼을 눌렀을때, fragmentAlarm.java로 가서, 알림이 삭제가 될수 있도록 한다.
+
+
+알림을 설정할때 지정했던 requestcode값을 arraylist에서 받아와서 pendingIntent로 넣어주면, 삭제해야할 알림이 삭제가 된다.
+
 ~~~java
 OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 OnPostListener를 가져와서 구현해줌
         @Override
