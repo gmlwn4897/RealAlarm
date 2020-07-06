@@ -699,7 +699,13 @@ if (notificationManager != null) {
 
             }
 ~~~
-다음과 같은 코드를 이용하여 화면이 꺼져있을때, 화면이 켜지면서 푸시알림이 보일수 있도록 했다.
+다음과 같은 코드를 이용하여 화면이 꺼져있을때, 화면이 켜지면서 다음과 같은 푸시알림이 보일수 있도록 했다.
+
+
+
+
+<img src="https://user-images.githubusercontent.com/62935657/86553144-dba78a80-bf84-11ea-8c84-abeefc613942.png" width="20%"></img>
+
 
 
 
