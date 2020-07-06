@@ -703,6 +703,9 @@ if (notificationManager != null) {
 
 
 >>2-5-3 알림삭제
+
+
+
 alarmlistener 인터페이스를 만들어서 삭제버튼을 눌렀을때, fragmentAlarm.java로 가서, 알림이 삭제가 될수 있도록 한다.
 ~~~java
 OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 OnPostListener를 가져와서 구현해줌
