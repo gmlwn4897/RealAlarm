@@ -380,5 +380,8 @@ private void setAlarm() {//알림 설정
 
 
 
+firebase에 저장된 알림데이터를 가져와서 알림을 저장한다.
+notification을 이용하여 알림을 하기 위해서 pendingIntent를 사용하는데, 여러개의 푸시알림을 위해서 pendingIntent에 들아가는 requestcode값이 각각 달라야한다. 따라서 이것을 구분해주기 위해서 설정한 알림시간의 시값+분값을 requestcode로 설정해주었고, intent를 이용하여 AlarmReceiver.class에 약이름과 requestcode값을 넘겨주었다.
+
 
 
