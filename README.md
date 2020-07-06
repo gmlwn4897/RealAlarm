@@ -14,8 +14,7 @@
 >#### 2-5 복용시간 알림
 >>##### 2-5-1 알림설정
 >>##### 2-5-2 푸시알림
->>##### 2-5-4 다중알림
->>##### 2-5-5 알림삭제
+>>##### 2-5-3 알림삭제
 
 ## 2. 기능구현
 
@@ -504,6 +503,144 @@ settingAlarm.java에서 넘겨준 약이름을 받아와서 설정한 notificati
 오레오 이상부터는 channelId를 필수로 써야하기 때문에 오레오 이전버전과, 오레오 이상버전의 notification알림을 if문을 이용해서 각각 설정해 주었다. 
 
 
+알림이 설정되면 adapter를 이용해서 알림리스트에 설정한 알림이 뜨도록 했다.
+
+
+alarmUpdate는 firebase에 저장된 알림데이터들을 ArrayList에 저장하여 MyAdapter로 넘겨준다. 
+~~~java
+private void alarmUpdate(){
+        firebaseFirestore.collection("AlarmDemo").orderBy("hour", Query.Direction.ASCENDING).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            alarmList = new ArrayList<>();
+                            alarmList.clear();
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                alarmList.add(new AlarmInfo(
+                                        document.getData().get("hour").toString(),
+                                        document.getData().get("minute").toString(),
+                                        document.getData().get("drugtext").toString(),
+                                        document.getData().get("ampm").toString(),
+                                        document.getId()
+                                ));
+                            }
+                            myAdapter = new MyAdapter(getActivity(), alarmList);
+                            myAdapter.setOnAlarmListener(onAlarmListener);
+                            recyclerView.setAdapter(myAdapter);
+                            myAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.d(TAG, "Error : ",task.getException());
+                        }
+                    }
+                });
+    }
+~~~
+
+MyAdapter.java
+~~~java
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private ArrayList<AlarmInfo> mDataset;
+    private Activity activity;
+    private OnAlarmListener onAlarmListener;
+    private Button modifybtn;
+    private Button deletebtn;
+    AlarmManager alarmManager;
+
+
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        MyViewHolder(Activity activity, CardView v, AlarmInfo alarmInfo) {
+            super(v);
+            cardView = v;
+        }
+    }
+
+    public int getItemViewType(int position){
+        return position;
+    }
+
+    public void setOnAlarmListener(OnAlarmListener onAlarmListener){
+        this.onAlarmListener = onAlarmListener;
+    }
+    MyAdapter(Activity activity, ArrayList<AlarmInfo> mDataset){
+        this.mDataset = mDataset;
+        this.activity = activity;
+    }
+
+
+    @NonNull
+    @Override
+    public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, final int viewType) {
+
+        final CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_alarm, parent, false);
+        final MyViewHolder myViewHolder = new MyViewHolder(activity, cardView, mDataset.get(viewType));
+        modifybtn = cardView.findViewById(R.id.modifybtn);
+        deletebtn = cardView.findViewById(R.id.deletebtn);
+
+        //수정버튼 클릭시
+        modifybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAlarmListener.onModify(myViewHolder.getAdapterPosition());
+                //myStartActivity(SettingAlarm.class);
+            }
+        });
+
+        //삭제버튼 클릭시
+        deletebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAlarmListener.onDelete(myViewHolder.getAdapterPosition());
+                myStartActivity(MainActivity.class);
+            }
+        });
+
+        return myViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final MyAdapter.MyViewHolder holder, final int position) {
+
+        final CardView cardView = holder.cardView;
+        TextView hourText = cardView.findViewById(R.id.hourText);
+        hourText.setText(mDataset.get(position).getHour());
+        Log.e("확인확인", String.valueOf(mDataset.get(position).getHour()));
+
+        TextView minuteText = cardView.findViewById(R.id.minuteText);
+        minuteText.setText(mDataset.get(position).getMinute());
+        Log.e("getMinute", String.valueOf(mDataset.get(position).getMinute()));
+
+        TextView drugText = cardView.findViewById(R.id.drug_text);
+        drugText.setText(mDataset.get(position).getDrugText());
+        Log.e("getDrugText",mDataset.get(position).getDrugText());
+
+        TextView ampmText = cardView.findViewById(R.id.ampmText);
+        ampmText.setText(mDataset.get(position).getAmpm());
+        Log.e("getAmpm", mDataset.get(position).getAmpm());
+
+        //modifybtn = cardView.findViewById(R.id.modifybtn);
+        //deletebtn = cardView.findViewById(R.id.deletebtn);
+    }
+    private void myStartActivity (Class c, AlarmReceiver alarmReceiver){//intent를 이용하여 id 값을 전달해줄것임.
+        Intent intent = new Intent(activity, c);
+        intent.putExtra("alarmInfo", (Parcelable) alarmReceiver);//앞에는 key값, 뒤에는 실제 값
+        //id값을 보내주면 WritePostActivity에서 받아서 쓸것임
+        activity.startActivity(intent);
+    }
+    private void myStartActivity(Class c) {//화면 전환을 위한 메서드를 함수로 정의함
+        Intent intent = new Intent(activity, c);
+        activity.startActivityForResult(intent, 1);
+    }
+    @Override
+    public int getItemCount() {
+        return (mDataset !=null ? mDataset.size() :0);
+    }
+
+
+}
+~~~
+
 
 
 >>2-5-2 푸시알림
@@ -565,5 +702,49 @@ if (notificationManager != null) {
 
 
 
+>>2-5-3 알림삭제
+alarmlistener 인터페이스를 만들어서 삭제버튼을 눌렀을때, fragmentAlarm.java로 가서, 알림이 삭제가 될수 있도록 한다.
+~~~java
+OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 OnPostListener를 가져와서 구현해줌
+        @Override
+        public void onDelete(final int position) {//MainAdapter에 넘겨주기 위한 메서드 작성
+
+            id = alarmList.get(position).getId();//document의 id에 맞게 지워주기 위해 id값을 얻어옴
+            firebaseFirestore.collection("AlarmDemo").document(id).delete()//그 id에 맞는 값들을 지워줌
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {//성공시
+                            alarmUpdate();
+
+                            Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+                            // intent.putExtra("cancelId", alarmList.get(position).getHour()+alarmList.get(position).getMinute());
+                            //cancelId = intent.getStringExtra("cancelId");
+                            //if (cancelId != null){
+                            Log.e("cancel : ","cancel");
+                            //alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                            // Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                            PendingIntent pIntent = PendingIntent.getBroadcast(getActivity(),
+                                    Integer.parseInt(alarmList.get(position).getHour()+alarmList.get(position).getMinute()),intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            alarmManager.cancel(pIntent);
+                            pIntent.cancel();
+                            Toast.makeText(getActivity(), "알림이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                            Log.e("ERROR : ","ERROR");
+
+                            Log.e("DB삭제 성공 : ","성공");
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener(){
+                @Override
+                public void onFailure(@NonNull Exception e) {//실패시
+                    startToast("게시글 삭제에 실패하였습니다.");
+                }
+            });
+        }
+~~~
+
+
+        
+        
+        
 
 
