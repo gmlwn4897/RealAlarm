@@ -689,6 +689,8 @@ ic_drug_icon.png
 
 
 setDefaults(Notification.DEFAULT_VIBRATE); 를 이용하여 푸시알림이 왔을때 진동이 울리게 했다.
+setContentTitle로 제목을 설정하고, setContentText로 본문을 설정한다.
+알림을 표시하기 위해서 notify(notificationId, builder.build())를 이용하여 builder에 전달한다. 
 
 
 ~~~java
