@@ -19,11 +19,11 @@
 ## 2. 기능구현
 
 >### 2-5 복용시간 알림
-알림을 설정했을 때 firebase에 데이터를 저장을 하기 위해서 firebase와 연동을 해야한다. 
+##### 1)알림을 설정했을 때 firebase에 데이터를 저장을 하기 위해서 firebase와 연동을 해야한다. 
 
 >>2-5-1 알림설정
 ##### floatingActionButton
-floatingActionButton을 추가하기 위해서 gradle에 다음과 같은 코드를 추가한다.
+##### 1)floatingActionButton을 추가하기 위해서 gradle에 다음과 같은 코드를 추가한다.
 ~~~java
 dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -33,7 +33,7 @@ dependencies {
 
 
 
-floatingActionButton을 추가하기 위해서 alarm_activity_main.xml 레이아웃에 코드를 추가한다.
+##### 2)floatingActionButton을 추가하기 위해서 alarm_activity_main.xml 레이아웃에 코드를 추가한다.
 ~~~java
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -80,7 +80,7 @@ floatingActionButton을 추가하기 위해서 alarm_activity_main.xml 레이아
 
 
 
-floatingActionButton을 누르면 알림을 설정할 수 있는 레이아웃으로 넘어가도록 다음과 같은 코드를 추가한다.
+##### 3)floatingActionButton을 누르면 알림을 설정할 수 있는 레이아웃으로 넘어가도록 다음과 같은 코드를 추가한다.
 
 ~~~java
   @Override
@@ -110,7 +110,7 @@ floatingActionButton을 누르면 알림을 설정할 수 있는 레이아웃으
 
 
 
-알림설정을 하는 layout코드는 다음과 같다.
+##### 4)알림설정을 하는 layout코드는 다음과 같다.
 ~~~java
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -174,7 +174,7 @@ floatingActionButton을 누르면 알림을 설정할 수 있는 레이아웃으
 
 
 
-알림을 설정하고 저장버튼을 누르면 setAlarm메소드로 가고 알림리스트 창으로 가게한다.
+##### 5)알림을 설정하고 저장버튼을 누르면 setAlarm메소드로 가고 알림리스트 창으로 가게한다.
 ~~~java
 View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -189,7 +189,7 @@ View.OnClickListener onClickListener = new View.OnClickListener() {
     };
 ~~~
 
-timepicker와 edittext를 이용해서 알림을 설정하면 다음코드와 같이 저장되고 uploader메소드로 넘어가면서 firebase에 저장이 되도록한다.
+##### 6)timepicker와 edittext를 이용해서 알림을 설정하면 다음코드와 같이 저장되고 uploader메소드로 넘어가면서 firebase에 저장이 되도록한다.
 
 ##### SettingAlarm.java
 ~~~
@@ -382,9 +382,8 @@ private void setAlarm() {//알림 설정
 
 
 
-firebase에 저장된 알림데이터를 가져와서 알림을 저장한다.
-notification을 이용하여 알림을 하기 위해서 pendingIntent를 사용하는데, 여러개의 푸시알림을 위해서 pendingIntent에 들아가는 requestcode값이 각각 달라야한다.
-따라서 이것을 구분해주기 위해서 설정한 알림시간의 시값+분값을 requestcode로 설정해주었고, intent를 이용하여 AlarmReceiver.class에 약이름과 requestcode값을 넘겨주었다.
+##### 7)firebase에 저장된 알림데이터를 가져와서 알림을 저장한다.
+* notification을 이용하여 알림을 하기 위해서 pendingIntent를 사용하는데, 여러개의 푸시알림을 위해서 pendingIntent에 들아가는 requestcode값이 각각 달라야한다. 따라서 이것을 구분해주기 위해서 설정한 알림시간의 시값+분값을 requestcode로 설정해주었고, intent를 이용하여 AlarmReceiver.class에 약이름과 requestcode값을 넘겨주었다.
 
 
 
@@ -497,17 +496,17 @@ public class AlarmReceiver extends BroadcastReceiver {
 ~~~
 
 
-settingAlarm.java에서 넘겨준 약이름을 받아와서 설정한 notification알림에 builder를 이용하여 contentText에 자기가 설정한 약이름을 띄울수있게 했다.
+* settingAlarm.java에서 넘겨준 약이름을 받아와서 설정한 notification알림에 builder를 이용하여 contentText에 자기가 설정한 약이름을 띄울수있게 했다.
 
 
 
-오레오 이상부터는 channelId를 필수로 써야하기 때문에 오레오 이전버전과, 오레오 이상버전의 notification알림을 if문을 이용해서 각각 설정해 주었다. 
+* 오레오 이상부터는 channelId를 필수로 써야하기 때문에 오레오 이전버전과, 오레오 이상버전의 notification알림을 if문을 이용해서 각각 설정해 주었다. 
 
 
-알림이 설정되면 adapter를 이용해서 알림리스트에 설정한 알림이 뜨도록 했다.
+##### 8)알림이 설정되면 adapter를 이용해서 알림리스트에 설정한 알림이 뜨도록 한다.
 
 
-alarmUpdate는 firebase에 저장된 알림데이터들을 ArrayList에 저장하여 MyAdapter로 넘겨준다. 
+* alarmUpdate는 firebase에 저장된 알림데이터들을 ArrayList에 저장하여 MyAdapter로 넘겨준다. 
 ~~~java
 private void alarmUpdate(){
         firebaseFirestore.collection("AlarmDemo").orderBy("hour", Query.Direction.ASCENDING).get()
@@ -641,7 +640,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 }
 ~~~
-알림을 설정하면 다음과 같은 알림리스트가 생성된다.
+##### 알림을 설정하면 다음과 같은 알림리스트가 생성된다.
 
 
 
@@ -688,9 +687,9 @@ NotificationChannel channel = new NotificationChannel(channelId, chaanelName, im
 
 
 
-setDefaults(Notification.DEFAULT_VIBRATE); 를 이용하여 푸시알림이 왔을때 진동이 울리게 했다.
-setContentTitle로 제목을 설정하고, setContentText로 본문을 설정한다.
-알림을 표시하기 위해서 notify(notificationId, builder.build())를 이용하여 builder에 전달한다. 
+* setDefaults(Notification.DEFAULT_VIBRATE); 를 이용하여 푸시알림이 왔을때 진동이 울리게 했다.
+* setContentTitle로 제목을 설정하고, setContentText로 본문을 설정한다.
+* 알림을 표시하기 위해서 notify(notificationId, builder.build())를 이용하여 builder에 전달한다. 
 
 
 ~~~java
@@ -732,10 +731,10 @@ public interface OnAlarmListener {
 
 
 
-alarmlistener 인터페이스를 만들어서 삭제버튼을 눌렀을때, fragmentAlarm.java로 가서, 알림이 삭제가 될수 있도록 한다.
+##### 1)alarmlistener 인터페이스를 만들어서 삭제버튼을 눌렀을때, fragmentAlarm.java로 가서, 알림이 삭제가 될수 있도록 한다.
 
 
-알림을 설정할때 지정했던 requestcode값을 arraylist에서 받아와서 pendingIntent로 넣어주면, 삭제해야할 알림이 삭제가 된다.
+* 알림을 설정할때 지정했던 requestcode값을 arraylist에서 받아와서 pendingIntent로 넣어주면, 삭제해야할 알림이 삭제가 된다.
 
 ~~~java
 OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 OnPostListener를 가져와서 구현해줌
