@@ -806,14 +806,18 @@ OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 On
 
 >>#### 2-2-4 약국 파싱
 1)공공데이터로 XML형태로 제공하는 전국 약국 정보를 파싱하기 위한 PharmParser.java 파일 만들기
+
 ##### 공공데이터 키 값 받기
-<img src="https://user-images.githubusercontent.com/62935657/86558576-bcb0f480-bf94-11ea-88e1-6cdb04e78f6a.png" width="40%"></img>
+<img src="https://user-images.githubusercontent.com/62935657/86558576-bcb0f480-bf94-11ea-88e1-6cdb04e78f6a.png" width="60%"></img>
 
 활용신청을 눌러서 키값을 받는다.
 
+<img src="https://user-images.githubusercontent.com/62935657/86558760-3812a600-bf95-11ea-8bb7-430bcc89fa83.png" width="60%"></img>
 
 
 ##### 공공데이터 파싱
+
+2)인증키값을 queryURL를 만들어서 약국을 파싱해 올 수 있도록 한다. 
 ~~~java
 XmlPullParser xpp;
     String key = "공공데이터 약국 키값 받기"; //약국 공공데이터 서비스키
@@ -831,6 +835,84 @@ XmlPullParser xpp;
 
         String queryUrl = "http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey="//요청 URL
                 + key +"&numOfRows=100" + "&emdongNm=" + location; //동 이름으로 검색
+~~~
 
+
+
+3)파싱해온 약국의 정보를 태그값에 따라서 주소, 약국, 전화번호를 가져오고 stringbuffer를 이용해서 저장해준다. 
+~~~java
+XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            xpp = factory.newPullParser();
+            xpp.setInput(new InputStreamReader(is, "UTF-8")); //inputstream 으로부터 xml 입력받기
+
+            String tag;
+
+            xpp.next();
+            int eventType = xpp.getEventType();
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        buffer.append("파싱 시작...\n\n");
+                        break;
+
+                    case XmlPullParser.START_TAG:
+                        tag = xpp.getName();//테그 이름 얻어오기
+
+                        if (tag.equals("item")) ;// 첫번째 태그값이랑 비교
+
+                        else if (tag.equals("addr")) {
+                            buffer.append("주소 : ");
+                            xpp.next();
+                            buffer.append(xpp.getText());//title 요소의 TEXT 읽어오기
+                            buffer.append("\n"); //줄바꿈
+                        } else if (tag.equals("yadmNm")) {
+                            buffer.append("약국명 :");
+                            xpp.next();
+                            buffer.append(xpp.getText());
+                            buffer.append("\n");
+                        } else if (tag.equals("telno")) {
+                            buffer.append("전화번호 :");
+                            xpp.next();
+                            buffer.append(xpp.getText());
+                            buffer.append("\n");
+                        }
+                        break;
+
+                    case XmlPullParser.TEXT:
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        tag = xpp.getName(); //테그 이름 얻어오기
+
+                        if (tag.equals("item"))
+                            buffer.append("\n");// 첫번째 검색결과종료 후 줄바꿈
+                        break;
+                }
+                break;
+
+                    case XmlPullParser.TEXT:
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        tag = xpp.getName(); //테그 이름 얻어오기
+
+                        if (tag.equals("item"))
+                            buffer.append("\n");// 첫번째 검색결과종료 후 줄바꿈
+                        break;
+                }
+
+                eventType = xpp.next();
+            }
+            
+        } catch (Exception e) {
+            // TODO Auto-generated catch blocke.printStackTrace();
+        }
+~~~
+
+4)stringbuffer를 이용해서 문자열 객체를 반환한다.
+~~~java
+return buffer.toString();//StringBuffer 문자열 객체 반환
+~~~
 
 
