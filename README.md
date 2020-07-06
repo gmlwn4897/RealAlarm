@@ -34,5 +34,9 @@ implementation 'com.google.firebase:firebase-analytics:17.4.3'
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
 }
 ~~~
-![image](https://user-images.githubusercontent.com/62935657/86548810-b1e86680-bf78-11ea-89d7-20f668da56bb.png)
 다음사진과 같이 google-services.json을 project>app에 저장을 한다.
+
+<img src="https://user-images.githubusercontent.com/62935657/86548810-b1e86680-bf78-11ea-89d7-20f668da56bb.png" width="60%"></img>
+
+
+
