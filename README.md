@@ -744,6 +744,38 @@ OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 On
             });
         }
 ~~~
+~~~java
+ private void alarmUpdate(){
+        firebaseFirestore.collection("AlarmDemo").orderBy("hour", Query.Direction.ASCENDING).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            alarmList = new ArrayList<>();
+                            alarmList.clear();
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                alarmList.add(new AlarmInfo(
+                                        document.getData().get("hour").toString(),
+                                        document.getData().get("minute").toString(),
+                                        document.getData().get("drugtext").toString(),
+                                        document.getData().get("ampm").toString(),
+                                        document.getId()
+                                ));
+                            }
+                            myAdapter = new MyAdapter(getActivity(), alarmList);
+                            myAdapter.setOnAlarmListener(onAlarmListener);
+                            recyclerView.setAdapter(myAdapter);
+                            myAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.d(TAG, "Error : ",task.getException());
+                        }
+                    }
+                });
+    }
+~~~
+
+
+
 
 
         
