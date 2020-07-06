@@ -804,6 +804,7 @@ OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 On
 
 
 
+
 >>#### 2-2-4 약국 파싱
 1)공공데이터로 XML형태로 제공하는 전국 약국 정보를 파싱하기 위한 PharmParser.java 파일 만들기
 
@@ -836,8 +837,8 @@ XmlPullParser xpp;
         String queryUrl = "http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey="//요청 URL
                 + key +"&numOfRows=100" + "&emdongNm=" + location; //동 이름으로 검색
 ~~~
-
-
+str변수에 edittext에 입력된 text를 얻어와서 encode한 후 location에 저장해준다.
+요청변수+키값+페이지+동 태그+location한 Url을 만들어서, 동이름으로 약국을 파싱해올 수 있게한다. 
 
 3)파싱해온 약국의 정보를 태그값에 따라서 주소, 약국, 전화번호를 가져오고 stringbuffer를 이용해서 저장해준다. 
 ~~~java
