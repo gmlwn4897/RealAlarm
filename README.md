@@ -506,8 +506,41 @@ settingAlarm.java에서 넘겨준 약이름을 받아와서 설정한 notificati
 
 
 
+>>2-5-2 푸시알림
+#####
+
+~~~java
+NotificationChannel channel = new NotificationChannel(channelId, chaanelName, importance);
+            channel.setDescription(description);
+
+            if (notificationManager.getNotificationChannel(channelId) == null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            builder.setSmallIcon(R.drawable.ic_drug_icon);
+
+            builder.setAutoCancel(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentTitle("약쏙")
+                    .setContentText(text + "을(를) 복용할시간에요:)")
+                    .setPriority(Notification.PRIORITY_DEFAULT)
+                    .setContentIntent(contentIntent)
+                    .setContentInfo("INFO")
+                    .setDefaults(Notification.DEFAULT_VIBRATE);
 
 
+            //if(notificationManager !=null){
+
+
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "My:Tag"
+            );
+            wakeLock.acquire(5000);
+            notificationManager.notify(Integer.parseInt(notificationid), builder.build());
+~~~
+
+
+ic_drug_icon.png
 
 
 
