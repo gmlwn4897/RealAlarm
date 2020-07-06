@@ -190,6 +190,8 @@ View.OnClickListener onClickListener = new View.OnClickListener() {
 ~~~
 
 timepicker와 edittext를 이용해서 알림을 설정하면 다음코드와 같이 저장되고 uploader메소드로 넘어가면서 firebase에 저장이 되도록한다.
+
+SettingAlarm.java
 ~~~
 private void setAlarm() {//알림 설정
 
@@ -381,7 +383,132 @@ private void setAlarm() {//알림 설정
 
 
 firebase에 저장된 알림데이터를 가져와서 알림을 저장한다.
-notification을 이용하여 알림을 하기 위해서 pendingIntent를 사용하는데, 여러개의 푸시알림을 위해서 pendingIntent에 들아가는 requestcode값이 각각 달라야한다. 따라서 이것을 구분해주기 위해서 설정한 알림시간의 시값+분값을 requestcode로 설정해주었고, intent를 이용하여 AlarmReceiver.class에 약이름과 requestcode값을 넘겨주었다.
+notification을 이용하여 알림을 하기 위해서 pendingIntent를 사용하는데, 여러개의 푸시알림을 위해서 pendingIntent에 들아가는 requestcode값이 각각 달라야한다.
+따라서 이것을 구분해주기 위해서 설정한 알림시간의 시값+분값을 requestcode로 설정해주었고, intent를 이용하여 AlarmReceiver.class에 약이름과 requestcode값을 넘겨주었다.
+
+
+
+AlarmReceiver.class
+~~~java
+public class AlarmReceiver extends BroadcastReceiver {
+    String notificationid;
+    AlarmManager alarmManager;
+    AlarmInfo alarmInfo2;
+    Intent mainIntent;
+    Context contexts;
+    String cancelId;
+    String str;
+    int i = 0;
+
+
+    //받아서 푸쉬알림 해주는 부분.
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        this.contexts = context;
+        notificationid = intent.getStringExtra("id");
+        String text = intent.getStringExtra("drug");
+        str = notificationid.toString();
+
+
+        Log.e("약번호 넘어오자...", String.valueOf(notificationid));
+        Log.e("약이름 넘어오자...",text);
+
+
+        //푸쉬알람 해주는 부분
+        mainIntent = new Intent(context, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, Integer.parseInt(notificationid),mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "drugId");
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+
+            Toast.makeText(context, "누가버전", Toast.LENGTH_SHORT).show();
+            builder.setSmallIcon(R.drawable.ic_drug_icon);
+
+            builder.setAutoCancel(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentTitle("약쏙")
+                    .setContentText(text + "을(를) 복용할시간에요:)")
+                    .setPriority(Notification.PRIORITY_DEFAULT)
+                    .setContentIntent(contentIntent)
+                    .setContentInfo("INFO")
+                    .setDefaults(Notification.DEFAULT_VIBRATE);
+
+
+            if (notificationManager != null) {
+
+
+                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "My:Tag"
+                );
+                wakeLock.acquire(5000);
+                notificationManager.notify(Integer.parseInt(notificationid), builder.build());
+
+            }
+        }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            Toast.makeText(context, "오레오 이상", Toast.LENGTH_SHORT).show();
+
+            builder.setSmallIcon(R.drawable.ic_drug_icon);
+
+            String channelId = "drug";
+            String chaanelName = "약쏙";
+            String description = "매일 정해진 시간에 알림합니다. ";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(channelId, chaanelName, importance);
+            channel.setDescription(description);
+
+            if (notificationManager.getNotificationChannel(channelId) == null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            builder.setSmallIcon(R.drawable.ic_drug_icon);
+
+            builder.setAutoCancel(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentTitle("약쏙")
+                    .setContentText(text + "을(를) 복용할시간에요:)")
+                    .setPriority(Notification.PRIORITY_DEFAULT)
+                    .setContentIntent(contentIntent)
+                    .setContentInfo("INFO")
+                    .setDefaults(Notification.DEFAULT_VIBRATE);
+
+
+            //if(notificationManager !=null){
+
+
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "My:Tag"
+            );
+            wakeLock.acquire(5000);
+            notificationManager.notify(Integer.parseInt(notificationid), builder.build());
+
+            //}
+
+        }
+    }
+}
+~~~
+
+
+settingAlarm.java에서 넘겨준 약이름을 받아와서 설정한 notification알림에 builder를 이용하여 contentText에 자기가 설정한 약이름을 띄울수있게 했다.
+
+
+
+오레오 이상부터는 channelId를 필수로 써야하기 때문에 오레오 이전버전과, 오레오 이상버전의 notification알림을 if문을 이용해서 각각 설정해 주었다. 
+
+
+
+
+
+
+
 
 
 
