@@ -541,6 +541,28 @@ NotificationChannel channel = new NotificationChannel(channelId, chaanelName, im
 
 
 ic_drug_icon.png
+<img src="https://user-images.githubusercontent.com/62935657/86551712-d9dbc800-bf80-11ea-8deb-d7e3d49fb645.png" width="10%"></img>
+를 넣어 푸시알림이 왔을때 위와 같은 icon이 뜨도록 설정했다.
+
+
+
+setDefaults(Notification.DEFAULT_VIBRATE); 를 이용하여 푸시알림이 왔을때 진동이 울리게 했다.
+
+
+~~~java
+if (notificationManager != null) {
+
+
+                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE, "My:Tag"
+                );
+                wakeLock.acquire(5000);
+                notificationManager.notify(Integer.parseInt(notificationid), builder.build());
+
+            }
+~~~
+다음과 같은 코드를 이용하여 화면이 꺼져있을때, 화면이 켜지면서 푸시알림이 보일수 있도록 했다.
+
 
 
 
