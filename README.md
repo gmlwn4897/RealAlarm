@@ -808,11 +808,11 @@ OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 On
 1)공공데이터로 XML형태로 제공하는 전국 약국 정보를 파싱하기 위한 PharmParser.java 파일 만들기
 
 ##### 공공데이터 키 값 받기
-<img src="https://user-images.githubusercontent.com/62935657/86558576-bcb0f480-bf94-11ea-88e1-6cdb04e78f6a.png" width="60%"></img>
+<img src="https://user-images.githubusercontent.com/62935657/86558576-bcb0f480-bf94-11ea-88e1-6cdb04e78f6a.png" width="70%"></img>
 
 활용신청을 눌러서 키값을 받는다.
 
-<img src="https://user-images.githubusercontent.com/62935657/86558760-3812a600-bf95-11ea-8bb7-430bcc89fa83.png" width="60%"></img>
+<img src="https://user-images.githubusercontent.com/62935657/86558760-3812a600-bf95-11ea-8bb7-430bcc89fa83.png" width="70%"></img>
 
 
 ##### 공공데이터 파싱
