@@ -26,6 +26,7 @@
 floatingActionButton을 추가하기 위해서 gradle에 다음과 같은 코드를 추가한다.
 ~~~java
 dependencies {
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation "com.google.android.material:material:1.1.0"
 }
 ~~~
