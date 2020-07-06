@@ -191,7 +191,7 @@ View.OnClickListener onClickListener = new View.OnClickListener() {
 
 timepicker와 edittext를 이용해서 알림을 설정하면 다음코드와 같이 저장되고 uploader메소드로 넘어가면서 firebase에 저장이 되도록한다.
 
-SettingAlarm.java
+#####SettingAlarm.java
 ~~~
 private void setAlarm() {//알림 설정
 
@@ -388,7 +388,7 @@ notification을 이용하여 알림을 하기 위해서 pendingIntent를 사용�
 
 
 
-AlarmReceiver.class
+#####AlarmReceiver.class
 ~~~java
 public class AlarmReceiver extends BroadcastReceiver {
     String notificationid;
@@ -538,7 +538,7 @@ private void alarmUpdate(){
     }
 ~~~
 
-MyAdapter.java
+#####MyAdapter.java
 ~~~java
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private ArrayList<AlarmInfo> mDataset;
@@ -649,7 +649,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 >>2-5-2 푸시알림
-#####
+#####AlarmReceiver.java
 
 ~~~java
 NotificationChannel channel = new NotificationChannel(channelId, chaanelName, importance);
@@ -682,7 +682,7 @@ NotificationChannel channel = new NotificationChannel(channelId, chaanelName, im
 ~~~
 
 
-ic_drug_icon.png
+#####ic_drug_icon.png
 <img src="https://user-images.githubusercontent.com/62935657/86551712-d9dbc800-bf80-11ea-8deb-d7e3d49fb645.png" width="10%"></img>
 를 넣어 푸시알림이 왔을때 위와 같은 icon이 뜨도록 설정했다.
 
@@ -719,7 +719,7 @@ if (notificationManager != null) {
 
 
 
-OnAlarmListener.java
+#####OnAlarmListener.java
 ~~~java
 package listener;
 
