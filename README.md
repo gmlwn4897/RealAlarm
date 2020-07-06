@@ -1,14 +1,6 @@
 
 스마트 모바일 프로그래밍 약쏙 최종 보고서
 ===================================
-목차   
------
-
-
-### 1.소개
->#### 1-1 주제선정이유
->#### 1-2 앱 개발중 사용한 기능
->#### 1-3 앱 개발로 얻는효과
 
 ### 2. 기능 구현
 >#### 2-5 복용시간 알림
@@ -807,5 +799,33 @@ OnAlarmListener onAlarmListener = new OnAlarmListener() {//인터페이스인 On
                 });
     }
 ~~~
+
+
+
+
+
+>>#### 2-2-4 약국 파싱
+1)공공데이터로 XML형태로 제공하는 전국 약국 정보를 파싱하기 위한 PharmParser.java 파일 만들기
+##### 공공데이터 키 값 받기
+
+##### 공공데이터 파싱
+~~~java
+XmlPullParser xpp;
+    String key = "공공데이터 약국 키값 받기"; //약국 공공데이터 서비스키
+
+    public String getXmlData() {
+        StringBuffer buffer = new StringBuffer();
+
+        String str = edit.getText().toString();//EditText에 작성된 Text얻어오기
+        String location = null;
+        try {
+            location = URLEncoder.encode(str, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String queryUrl = "http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList?serviceKey="//요청 URL
+                + key +"&numOfRows=100" + "&emdongNm=" + location; //동 이름으로 검색
+
 
 
