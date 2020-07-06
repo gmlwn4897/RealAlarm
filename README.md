@@ -645,7 +645,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
 
-<img src="https://user-images.githubusercontent.com/62935657/86553245-26c19d80-bf85-11ea-9c49-e0157edfa11b.png" width="20%"></img>
+<img src="https://user-images.githubusercontent.com/62935657/86553245-26c19d80-bf85-11ea-9c49-e0157edfa11b.png" width="30%"></img>
 
 
 >>2-5-2 푸시알림
@@ -710,7 +710,7 @@ if (notificationManager != null) {
 
 
 
-<img src="https://user-images.githubusercontent.com/62935657/86553144-dba78a80-bf84-11ea-8c84-abeefc613942.png" width="20%"></img>
+<img src="https://user-images.githubusercontent.com/62935657/86553144-dba78a80-bf84-11ea-8c84-abeefc613942.png" width="30%"></img>
 
 
 
